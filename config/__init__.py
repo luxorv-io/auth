@@ -14,7 +14,7 @@ def bootstrap_configuration():
     # TODO: change prints with logging
     print("Bootstraping the configuration with the {} environment".format(os.environ['ACTIVE_ENVIRONMENT']))
     # Selected environment
-    selected_environment = os.environ['ACTIVE_ENVIRONMENT']
+    selected_environment = os.environ['ACTIVE_ENVIRONMENT'] if 'ACTIVE_ENVIRONMENT' in os.environ else 'default'
 
     # Set the environment module depending on the selected environment type
     active_config = "{}Config".format(selected_environment.title())

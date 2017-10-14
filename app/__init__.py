@@ -19,3 +19,5 @@ db = SQLAlchemy(app)
 # Define marshmallow object to serialize
 ma = Marshmallow(app)
 # TODO db create all
+
+

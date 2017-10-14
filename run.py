@@ -1,13 +1,6 @@
 #!env/bin/python
 from app import app
-
-
-class TestResource:
-
-    @post
-    def some_method(some_arg):
-        return "Helloooo"
-
+from app import users
 
 if __name__ == '__main__':
-    app.run(debug=True, host='luxorv.local')
+    app.run(debug=True, host='luxorv.io')

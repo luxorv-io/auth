@@ -50,6 +50,3 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(updated_user.email, user_to_update.email)
         self.assertEqual(updated_user.username, user_to_update.username)
         self.assertEqual(updated_user.password, user_to_update.password)
-
-if __name__ == '__main__':
-    unittest.main()

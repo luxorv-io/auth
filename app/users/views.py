@@ -14,12 +14,13 @@ class UserController:
         return "YOU WANTED {}".format(username)
 
     @Get('/users', endpoint='user')
-    def get_all_users():
+    def get_all_users(self):
         return "YOU WANTED ALL"
 
     @Post('/users', body=User, endpoint='user')
-    def new(user):
+    def new(user: User):
         print("called some method with {}".format(user))
+        user.save()
         return "Helloooo {}".format(user.username)
 
     @Delete('/user/<string:username>', body=User, endpoint='user')

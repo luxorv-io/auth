@@ -1,11 +1,15 @@
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask import Flask
+from injector import Module, provider
 from sqlalchemy import Column, Integer, DateTime, func
+from sqlalchemy.orm import scoped_session
 
 
-class Database(SQLAlchemy):
+class Database(Module):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @provider
+    def provide_ext(self, app: Flask) -> scoped_session:
+        return
+
 
 
 class BaseModel(object):
@@ -20,3 +24,4 @@ class BaseModel(object):
         default=func.current_timestamp(),
         onupdate=func.current_timestamp()
     )
+

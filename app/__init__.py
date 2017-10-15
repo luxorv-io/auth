@@ -1,23 +1,24 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
+from app.database import Database, BaseModel
+from app.serializer import Serializer
 
 from config import bootstrap_configuration
 
-# Start the configuration bootstrap
-selected_config = bootstrap_configuration()
 
-# Instantiate the WSGI application object
-app = Flask(__name__)
+class AppModule(Flask):
 
-# Configure the app
-app.config.from_object(selected_config)
+    def __init__(self, name):
+        # Instantiate the WSGI application object
+        super().__init__(name)
+        self.config.from_object(bootstrap_configuration())
 
-# Define db object to be used by other modules
-db = SQLAlchemy(app)
+        self.database = Database(model_class=BaseModel)
+        self.database.init_app(self)
+        self.db_session = self.database.create_scoped_session()
 
-# Define marshmallow object to serialize
-ma = Marshmallow(app)
-# TODO db create all
+        self.marshmallow = Serializer()
+        self.marshmallow.init_app(self)
 
+
+server = AppModule(__name__)
 

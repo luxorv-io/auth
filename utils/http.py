@@ -1,4 +1,4 @@
-from app import app
+from app import server
 
 
 class Get(object):
@@ -13,7 +13,7 @@ class Get(object):
         # Setting the endpoint name to the method name
         self.options['endpoint'] = func.__name__
 
-        @app.route(self.route, **self.options)
+        @server.route(self.route, **self.options)
         def get_wrapper(*args, **kwargs):
             # Call the method with the respective args
             return func(*args, **kwargs)
@@ -36,7 +36,7 @@ class Post(object):
         self.options.setdefault('endpoint', "{}-{}".format(self.endpoint, func.__name__))
 
         # Append the route to the application
-        @app.route(self.route, **self.options)
+        @server.route(self.route, **self.options)
         def get_wrapper(**kwargs):
             from flask import request
             # append request body to the method

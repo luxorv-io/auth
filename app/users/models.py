@@ -1,22 +1,38 @@
-from app import ma
-from app import db
-from marshmallow import post_load
-from utils.db import BaseModel
+from sqlalchemy import Column, String
+from app.database import BaseModel
+from app import server
 
 
 class User(BaseModel):
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    email = db.Column(db.String)
-    username = db.Column(db.String)
-    password = db.Column(db.String)
+
+    __tablename__ = 'users'
+
+    first_name = Column(String(120))
+    last_name = Column(String(120))
+    email = Column(String(120))
+    username = Column(String(120))
+    password = Column(String(120))
 
     def __init__(self, **kwargs):
-        self.first_name = kwargs.get('first_name', '')
-        self.last_name = kwargs.get('last_name', '')
-        self.email = kwargs.get('email', '')
-        self.username = kwargs.get('username', '')
-        self.password = kwargs.get('password', '')
+        super().__init__()
+
+    def save(self):
+        server.db_session.add(self)
+        server.db_session.commit()
+
+    def update(self):
+        server.db_session.commit()
+
+    @staticmethod
+    def get(**kwargs):
+        return User.query.filter_by(**kwargs).first()
+
+    @staticmethod
+    def get_all(**kwargs):
+        return User.query.filter_by(**kwargs).all()
+
+    def __repr__(self):
+        return '<User %r>' % self.username
 
     def __str__(self):
         return str(dict(
@@ -26,12 +42,3 @@ class User(BaseModel):
             password=self.password,
             username=self.username
         ))
-
-
-class UserSchema(ma.ModelSchema):
-    class Meta:
-        model = User
-
-    @post_load
-    def make_user(self, data):
-        return User(**data)

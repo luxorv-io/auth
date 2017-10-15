@@ -1,6 +1,9 @@
 #!env/bin/python
-from app import app
+from app import server
 from app import users
 
 if __name__ == '__main__':
-    app.run(debug=True, host='luxorv.io')
+    server.run(
+        debug=True,
+        host='luxorv.io'
+    )

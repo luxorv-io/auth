@@ -1,5 +1,7 @@
 from app.users.models import User
-from app import server
+from app.database import db
+from test import test_app
+
 
 import unittest
 
@@ -7,10 +9,11 @@ import unittest
 class UserModelTestCase(unittest.TestCase):
 
     def setUp(self):
-        server.db_session.commit()
-        server.database.drop_all()
-        server.database.create_all()
-        self.user_data = dict(
+        db.init_app(app=test_app)
+        db.session.commit()
+        db.drop_all(app=test_app)
+        db.create_all(app=test_app)
+        self.mock_user_data = dict(
             first_name='test',
             last_name='case',
             email='test@case.com',
@@ -19,11 +22,11 @@ class UserModelTestCase(unittest.TestCase):
         )
 
     def tearDown(self):
-        server.db_session.commit()
-        server.database.drop_all()
+        db.session.commit()
+        db.drop_all()
 
     def test_creates_new_user(self):
-        user_to_save: User = User(**self.user_data)
+        user_to_save: User = User(**self.mock_user_data)
         user_to_save.save()
 
         created_user: User = User.get(username=user_to_save.username)
@@ -36,7 +39,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(created_user.password, user_to_save.password)
 
     def test_updates_user_info(self):
-        user_to_update = User(**self.user_data)
+        user_to_update = User(**self.mock_user_data)
         user_to_update.save()
 
         user_to_update.username = 'tesadfasf'
@@ -50,3 +53,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(updated_user.email, user_to_update.email)
         self.assertEqual(updated_user.username, user_to_update.username)
         self.assertEqual(updated_user.password, user_to_update.password)
+
+
+if __name__ == '__main__':
+    unittest.main()

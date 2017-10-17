@@ -1,9 +1,7 @@
 from flask_marshmallow import Marshmallow
-from flask_marshmallow import sqla
+
+ma = Marshmallow()
 
 
-class Serializer(Marshmallow):
-
-    def __init__(self):
-        super(Serializer).__init__()
-        self.ModelSchema = sqla.ModelSchema
+class BaseSchema(ma.ModelSchema):
+    pass

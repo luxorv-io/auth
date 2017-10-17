@@ -9,13 +9,20 @@ def get_blueprint_or_base_app(func):
     if module_name == 'app':
         module_name = ''
     _module = import_module('app.{}'.format(module_name))
-    return getattr(_module, module_name)
+    return getattr(_module, module_name), module_name
+
+
+def get_service(func):
+    module_name: str = func.__module__.split('.')[1]
+    _module = import_module('app.{}.services'.format(module_name))
+    if module_name[-1] == 's':
+        module_name = module_name[:-1]
+    return getattr(_module, '{}Service'.format(module_name.capitalize()))
 
 
 def inject_session(func):
     def wrapper(obj, *args, **kwargs):
         return func(obj, db.session, *args, **kwargs)
-
     return wrapper
 
 

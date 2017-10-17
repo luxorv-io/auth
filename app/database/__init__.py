@@ -1,5 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, DateTime, func
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declarative_base
 
 

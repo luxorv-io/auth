@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String
 from app.database import BaseModel
-from app import server
+from utils import inject_session
 
 
 class User(BaseModel):
@@ -14,14 +14,20 @@ class User(BaseModel):
     password = Column(String(120))
 
     def __init__(self, **kwargs):
-        super().__init__()
+        self.first_name = kwargs.pop('first_name', '')
+        self.last_name = kwargs.pop('last_name', '')
+        self.email = kwargs.pop('email', '')
+        self.username = kwargs.pop('username', '')
+        self.password = kwargs.pop('password', '')
 
-    def save(self):
-        server.db_session.add(self)
-        server.db_session.commit()
+    @inject_session
+    def save(self, session):
+        session.add(self)
+        session.commit()
 
-    def update(self):
-        server.db_session.commit()
+    @inject_session
+    def update(self, session):
+        session.commit()
 
     @staticmethod
     def get(**kwargs):

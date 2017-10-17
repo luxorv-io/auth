@@ -1,7 +1,8 @@
-from app import server
+from importlib import import_module
+from utils import get_blueprint_or_base_app
 
 
-class Get(object):
+class get(object):
 
     def __init__(self, route, **options):
         self.route = route
@@ -9,18 +10,21 @@ class Get(object):
         self.options['methods'] = [self.__class__.__name__.upper()]
 
     def __call__(self, func):
+        print(func.__module__)
         print('{} CALLED'.format(self.options['methods'][0]))
         # Setting the endpoint name to the method name
         self.options['endpoint'] = func.__name__
 
-        @server.route(self.route, **self.options)
+        _app = get_blueprint_or_base_app(func)
+
+        @_app.route(self.route, **self.options)
         def get_wrapper(*args, **kwargs):
             # Call the method with the respective args
             return func(*args, **kwargs)
         return get_wrapper
 
 
-class Post(object):
+class post(object):
 
     def __init__(self, route, body=None, endpoint=None, **options):
         self.route = route
@@ -35,8 +39,10 @@ class Post(object):
         # Setting the endpoint name to the resource_name-method_name
         self.options.setdefault('endpoint', "{}-{}".format(self.endpoint, func.__name__))
 
+        _app = get_blueprint_or_base_app(func)
+
         # Append the route to the application
-        @server.route(self.route, **self.options)
+        @_app.route(self.route, **self.options)
         def get_wrapper(**kwargs):
             from flask import request
             # append request body to the method
@@ -54,10 +60,10 @@ class Post(object):
 
 
 # Put decorator
-class Put(Post):
+class put(post):
     pass
 
 
 # Delete decorator
-class Delete(Post):
+class delete(post):
     pass

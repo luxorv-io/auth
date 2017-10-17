@@ -1,24 +1,25 @@
 from flask import Flask
-from app.database import Database, BaseModel
-from app.serializer import Serializer
+from app.users import users, models as user_models
+from app.database import db, BaseModel
+from utils import import_all_subclasses_of
 
 from config import bootstrap_configuration
 
 
 class AppModule(Flask):
 
-    def __init__(self, name):
+    def __init__(self, name=__name__):
         # Instantiate the WSGI application object
         super().__init__(name)
         self.config.from_object(bootstrap_configuration())
+        self.db = db
+        self.init_app()
 
-        self.database = Database(model_class=BaseModel)
-        self.database.init_app(self)
-        self.db_session = self.database.create_scoped_session()
+    def init_app(self):
+        self.register_blueprint(users)
+        self.db.init_app(app=self)
+        self.create_database()
 
-        self.marshmallow = Serializer()
-        self.marshmallow.init_app(self)
-
-
-server = AppModule(__name__)
-
+    def create_database(self):
+        import_all_subclasses_of(user_models, BaseModel, locals())
+        self.db.create_all(app=self)

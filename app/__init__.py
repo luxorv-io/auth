@@ -14,7 +14,7 @@ class AppModule(Flask):
         super().__init__(name)
         self.config.from_object(bootstrap_configuration())
         self.db = db
-        self.ma = ma
+        self.ma = ma        
         self.init_app()
 
     def init_app(self):

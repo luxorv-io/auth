@@ -1,2 +1,6 @@
+from flask import Blueprint
 from app.users import views
-from app.users import models
+
+
+users = Blueprint('users', __name__)
+

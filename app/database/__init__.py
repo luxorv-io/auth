@@ -1,14 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy, Model
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, DateTime, func
+from sqlalchemy.ext.declarative import declarative_base
 
 
-class Database(SQLAlchemy):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+Base = declarative_base()
 
 
-class BaseModel(object):
+class BaseModel(Base):
     __abstract__ = True
     id = Column(Integer, primary_key=True)
     date_created = Column(
@@ -20,3 +18,6 @@ class BaseModel(object):
         default=func.current_timestamp(),
         onupdate=func.current_timestamp()
     )
+
+
+db = SQLAlchemy(model_class=BaseModel)

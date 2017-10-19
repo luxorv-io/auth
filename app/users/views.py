@@ -1,6 +1,6 @@
 from app.users.models import User
 from app.users.services import UserService
-from utils.http import get, post, put, delete
+from utils.http import get, post, delete
 
 
 class UserController:
@@ -22,11 +22,9 @@ class UserController:
         return service.new_user(user)
 
     @delete('/user/<string:username>', body=User)
-    def delete_user_by_id(username, service: UserService):
-        print(username)
-        return "YOU WANTED {}".format(username)
+    def delete_user_by_id(user_id, service: UserService):
+        return service.delete_user_by(id=user_id)
 
     @delete('/user/<int:user_id>', body=User)
-    def delete_user_by_username(user_id, service: UserService):
-        print(user_id)
-        return "YOU WANTED {}".format(user_id)
+    def delete_user_by_username(username, service: UserService):
+        return service.delete_user_by(username=username)

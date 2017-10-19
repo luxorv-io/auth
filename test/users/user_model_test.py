@@ -1,18 +1,13 @@
+from unittest import TestCase
+
+from test import set_up_database, tear_down_database
 from app.users.models import User
-from app.database import db
-from test import test_app
 
 
-import unittest
-
-
-class UserModelTestCase(unittest.TestCase):
+class UserModelTestCase(TestCase):
 
     def setUp(self):
-        db.init_app(app=test_app)
-        db.session.commit()
-        db.drop_all(app=test_app)
-        db.create_all(app=test_app)
+        set_up_database()
         self.mock_user_data = dict(
             first_name='test',
             last_name='case',
@@ -22,14 +17,13 @@ class UserModelTestCase(unittest.TestCase):
         )
 
     def tearDown(self):
-        db.session.commit()
-        db.drop_all()
+        tear_down_database()
 
     def test_creates_new_user(self):
-        user_to_save: User = User(**self.mock_user_data)
+        user_to_save = User(**self.mock_user_data)
         user_to_save.save()
 
-        created_user: User = User.get(username=user_to_save.username)
+        created_user = User.get(username=user_to_save.username)
 
         self.assertEqual(created_user.id, user_to_save.id)
         self.assertEqual(created_user.first_name, user_to_save.first_name)
@@ -54,6 +48,30 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(updated_user.username, user_to_update.username)
         self.assertEqual(updated_user.password, user_to_update.password)
 
+    def test_deletes_user_by_id(self):
+        user_to_delete = User(**self.mock_user_data)
+        user_to_delete.save()
 
-if __name__ == '__main__':
-    unittest.main()
+        self.assertIsNotNone(user_to_delete)
+        self.assertTrue(isinstance(user_to_delete, User))
+
+        user_to_delete.delete()
+
+        user_to_delete = User.query.filter_by(id=1).first()
+
+        self.assertIsNone(user_to_delete)
+
+    def test_deletes_user_by_username(self):
+        user_to_delete = User(**self.mock_user_data)
+        user_to_delete.save()
+
+        self.assertIsNotNone(user_to_delete)
+        self.assertTrue(isinstance(user_to_delete, User))
+
+        user_to_delete.delete()
+
+        user_to_delete = User.query\
+            .filter_by(username=self.mock_user_data['username'])\
+            .first()
+
+        self.assertIsNone(user_to_delete)

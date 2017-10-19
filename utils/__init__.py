@@ -13,7 +13,7 @@ def get_blueprint_or_base_app(func):
 
 
 def get_service(func):
-    module_name: str = func.__module__.split('.')[1]
+    module_name = func.__module__.split('.')[1]
     _module = import_module('app.{}.services'.format(module_name))
     if module_name[-1] == 's':
         module_name = module_name[:-1]

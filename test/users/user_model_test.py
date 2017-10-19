@@ -43,7 +43,7 @@ class UserModelTestCase(TestCase):
         self.assertEqual(updated_user.password, user_to_update.password)
 
     def test_deletes_user_by_id(self):
-        user_to_delete = User(**self.mock_user_data)
+        user_to_delete = User(**mock_user_data)
         user_to_delete.save()
 
         self.assertIsNotNone(user_to_delete)

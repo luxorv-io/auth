@@ -2,6 +2,7 @@ from unittest import TestSuite, defaultTestLoader, TextTestRunner
 from flask import Flask
 from config import bootstrap_configuration
 from app.database import db
+from app.serializer import ma
 
 test_modules = [
     'test.users.user_integration_test',
@@ -29,6 +30,11 @@ def set_up_database():
     db.session.commit()
     db.drop_all(app=test_app)
     db.create_all(app=test_app)
+
+
+def set_up_serializer():
+    ma.app = test_app
+    ma.init_app(app=test_app)
 
 
 def tear_down_database():

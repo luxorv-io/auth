@@ -11,7 +11,8 @@ class UserService(object):
 
     def get_user_by(self, **kwargs) -> User:
         user = User.query.filter_by(**kwargs).first()
-        return jsonify(self.user_schema.dump(user).data)
+        user_json = self.user_schema.dump(user).data
+        return jsonify(user_json)
 
     def get_all_users(self):
         users = User.query.all()
@@ -19,7 +20,8 @@ class UserService(object):
 
     def new_user(self, user):
         user.save()
-        return jsonify(self.user_schema.dump(user).data)
+        user_json = self.user_schema.dump(user).data
+        return jsonify(user_json)
 
     def delete_user_by(self, **kwargs):
         user = User.query.filter_by(**kwargs).first()

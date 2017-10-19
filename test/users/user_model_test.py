@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from test import set_up_database, tear_down_database
+from test.users import mock_user_data
 from app.users.models import User
 
 
@@ -8,19 +9,12 @@ class UserModelTestCase(TestCase):
 
     def setUp(self):
         set_up_database()
-        self.mock_user_data = dict(
-            first_name='test',
-            last_name='case',
-            email='test@case.com',
-            username='test_user',
-            password='12345'
-        )
 
     def tearDown(self):
         tear_down_database()
 
     def test_creates_new_user(self):
-        user_to_save = User(**self.mock_user_data)
+        user_to_save = User(**mock_user_data)
         user_to_save.save()
 
         created_user = User.get(username=user_to_save.username)
@@ -33,7 +27,7 @@ class UserModelTestCase(TestCase):
         self.assertEqual(created_user.password, user_to_save.password)
 
     def test_updates_user_info(self):
-        user_to_update = User(**self.mock_user_data)
+        user_to_update = User(**mock_user_data)
         user_to_update.save()
 
         user_to_update.username = 'tesadfasf'
@@ -62,7 +56,7 @@ class UserModelTestCase(TestCase):
         self.assertIsNone(user_to_delete)
 
     def test_deletes_user_by_username(self):
-        user_to_delete = User(**self.mock_user_data)
+        user_to_delete = User(**mock_user_data)
         user_to_delete.save()
 
         self.assertIsNotNone(user_to_delete)
@@ -71,7 +65,7 @@ class UserModelTestCase(TestCase):
         user_to_delete.delete()
 
         user_to_delete = User.query\
-            .filter_by(username=self.mock_user_data['username'])\
+            .filter_by(username=mock_user_data['username'])\
             .first()
 
         self.assertIsNone(user_to_delete)

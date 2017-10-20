@@ -76,5 +76,5 @@ class put(post):
 
 
 # Delete decorator
-class delete(post):
+class delete(get):
     pass

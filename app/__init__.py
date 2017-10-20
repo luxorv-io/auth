@@ -19,6 +19,8 @@ class AppModule(Flask):
 
     def init_app(self):
         self.register_blueprint(users)
+        self.ma.app = self
+        self.db.app = self
         self.ma.init_app(app=self)
         self.db.init_app(app=self)
         BaseModel.query = db.session.query_property()
@@ -27,7 +29,7 @@ class AppModule(Flask):
     def create_database(self):
         import_all_subclasses_of(user_models, BaseModel, locals())
 
-        if self.config.get('testing'):
+        if self.config  .get('testing'):
             self.db.drop_all(app=self)
 
         self.db.create_all(app=self)

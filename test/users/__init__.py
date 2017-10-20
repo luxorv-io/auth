@@ -8,4 +8,5 @@ mock_user_data = dict(
 )
 
 from test.users.user_model_test import UserModelTestCase
-from test.users.user_service_test import UserServiceTest
+from test.users.user_service_test import UserServiceTestCase
+from test.users.user_integration_test import UserIntegrationTestCase

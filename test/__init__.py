@@ -1,6 +1,5 @@
 from unittest import TestSuite, defaultTestLoader, TextTestRunner
-from flask import Flask
-from config import bootstrap_configuration
+from app import AppModule
 from app.database import db
 from app.serializer import ma
 
@@ -10,11 +9,11 @@ test_modules = [
     'test.users.user_service_test',
 ]
 
-test_app = Flask(__name__)
-test_app.config.from_object(bootstrap_configuration())
+test_app = AppModule()
 
 
 def start_suite():
+    # Establish an application context before running the tests.
     test_suite = TestSuite()
     test_runner = TextTestRunner()
 
@@ -25,15 +24,15 @@ def start_suite():
 
 
 def set_up_database():
-    db.app = test_app
-    db.init_app(test_app)
+    ctx = test_app.app_context()
+    ctx.push()
+
     db.session.commit()
     db.drop_all(app=test_app)
     db.create_all(app=test_app)
 
 
 def set_up_serializer():
-    ma.app = test_app
     ma.init_app(app=test_app)
 
 

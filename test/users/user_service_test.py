@@ -7,6 +7,8 @@ from app.users.models.responses import UserSchema
 from test import test_app, set_up_database, tear_down_database, set_up_serializer
 from test.users import mock_user_data
 
+# TODO: Add commentary on all the test cases
+
 
 class UserServiceTestCase(TestCase):
 

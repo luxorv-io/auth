@@ -52,8 +52,6 @@ class UserIntegrationTestCase(TestCase):
         self.assertEqual(user_to_create.last_name, created_user.last_name)
         self.assertEqual(user_to_create.email, created_user.email)
 
-
-
     def add_new_user(self):
         self.service.new_user(User(**mock_user_data))
 
